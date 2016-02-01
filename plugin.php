@@ -36,7 +36,7 @@ $field_filters = array(
       // if the string does not contain anything unusual
       return $value === filter_var($value, FILTER_SANITIZE_STRING) ? $value : FALSE;
     },
-    'notice' => sprintf('<strong>%s</strong> is invalid.', $fields[$field]['label']),
+    'notice' => sprintf('<strong>%s</strong> is invalid.', $fields['purchase_order_reference']['label']),
   ),
 );
 
