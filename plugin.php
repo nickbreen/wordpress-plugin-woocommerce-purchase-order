@@ -81,4 +81,10 @@ add_action('woocommerce_admin_order_data_after_order_details', function ($order)
     printf('<div class="clear"></div><h4 style="clear: both">%s</h4><div class="address">%s</div>', $order_details_label, $s);
 });
 
-// TODO add to order received page
+add_action('woocommerce_thankyou', function ($order_id) use ($fields) {
+  foreach ($fields as $field => $def)
+    if ($value = get_post_meta($order_id, $field, TRUE))
+      $s .= sprintf('<tr><th>%s:</th><td>%s<td/></tr>', esc_html($def['label']), esc_html($value));
+  if ($s)
+    printf('<table class="shop_table order_details">%s</table>', $s);
+},5);
