@@ -69,7 +69,6 @@ add_filter('woocommerce_email_order_meta_fields', function ($email_fields, $sent
       'label' => $def['label'],
       'value' => get_post_meta($order->id, $field, TRUE),
     );
-  $email_fields[] = array('label'=>'Test Label', 'value' => 'Test Value');
   return $email_fields;
 });
 
