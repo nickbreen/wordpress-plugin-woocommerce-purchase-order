@@ -70,7 +70,7 @@ add_filter('woocommerce_email_order_meta_fields', function ($email_fields, $sent
       'value' => get_post_meta($order->id, $field, TRUE),
     );
   return $email_fields;
-});
+}, 10, 3);
 
 add_action('woocommerce_admin_order_data_after_order_details', function ($order) use ($fields, $order_details_label) {
   foreach ($fields as $field => $def)
@@ -87,3 +87,15 @@ add_action('woocommerce_thankyou', function ($order_id) use ($fields) {
   if ($s)
     printf('<table class="shop_table order_details">%s</table>', $s);
 },5);
+
+// Also add the field to the PDF invoice/packing-slip if the plugin is available.
+// See http://docs.wpovernight.com/woocommerce-pdf-invoices-packing-slips/pdf-template-action-hooks/
+add_action('wpo_wcpdf_after_order_data', function ($template_type, $order) use ($fields) {
+  foreach ($fields as $field => $def)
+    if ($value = get_post_meta($order->id, $field, TRUE))
+      printf('<tr><th>%s:</th><td>%s<td/></tr>', esc_html($def['label']), esc_html($value));
+}, 10, 2);
+
+add_action('wpo_wcpdf_before_item_meta', function ($template_type, $item, $order) {
+  printf('<span class="item-meta"><dl><dt>%s:</dt><dd><p>%s</p></dd></dl></span>', 'Unit Price', $item['ex_single_price']);
+}, 10, 3);
